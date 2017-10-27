@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.ZoomControls;
 
 import com.baidu.location.BDLocation;
@@ -14,6 +15,7 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
@@ -33,7 +35,7 @@ import butterknife.OnClick;
  *         地图Activity
  */
 public class MapActivity extends AppCompatActivity implements
-        BaiduMap.OnMapStatusChangeListener, BaiduMap.OnMapLoadedCallback {
+        BaiduMap.OnMarkerClickListener {
     private static final String TAG = "MapActivity";
 
     @BindView(R.id.map_view)
@@ -60,11 +62,10 @@ public class MapActivity extends AppCompatActivity implements
     private LatLng mCurrentLatLng;
     private static final float DEFAULT_ZOOM = 17f;
     private BitmapDescriptor mSearchBd;
-    private boolean mSearchFlag = false;
-    private Marker mSearchMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         ButterKnife.bind(this);
@@ -74,12 +75,14 @@ public class MapActivity extends AppCompatActivity implements
 
     @Override
     protected void onResume() {
+        Log.d(TAG, "onResume: ");
         mMapView.onResume();
         super.onResume();
     }
 
     @Override
     protected void onPause() {
+        Log.d(TAG, "onPause: ");
         mMapView.onPause();
         super.onPause();
     }
@@ -96,20 +99,26 @@ public class MapActivity extends AppCompatActivity implements
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SEARCH) {
             if (resultCode == Activity.RESULT_OK) {
                 double latitude = data.getDoubleExtra(SearchPlaceConstant.EXTRA_LATITUDE, 0D);
                 double longitude = data.getDoubleExtra(SearchPlaceConstant.EXTRA_LONGITUDE, 0D);
                 LatLng latLng = new LatLng(latitude, longitude);
 
-                mSearchFlag = true;
-                Log.d(TAG, "onActivityResult: latLng: " + latLng);
-                locToCurrentPosition(mBaiduMap, latLng, DEFAULT_ZOOM);
-
+                Log.d(TAG, "onActivityResult: mLatLng: " + latLng);
+                MapStatus.Builder builder = new MapStatus.Builder();
+                builder.target(latLng);
+                MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newMapStatus(builder.build());
+                mBaiduMap.setMapStatus(mapStatusUpdate);
+                if (mSearchBd == null) {
+                    mSearchBd = BitmapDescriptorFactory.fromResource(R.drawable.ic_location);
+                }
+                MarkerOptions option = new MarkerOptions().icon(mSearchBd).position(latLng);
+                mBaiduMap.addOverlay(option);
 
             }
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @OnClick({R.id.iv_search, R.id.iv_zoom_out, R.id.iv_zoom_in, R.id.iv_gps})
@@ -146,9 +155,7 @@ public class MapActivity extends AppCompatActivity implements
                 child.setVisibility(View.INVISIBLE);
             }
         }
-        mBaiduMap.setOnMapStatusChangeListener(this);
-        mBaiduMap.setOnMapLoadedCallback(this);
-
+        mBaiduMap.setOnMarkerClickListener(this);
 
     }
 
@@ -207,40 +214,9 @@ public class MapActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onMapStatusChangeStart(MapStatus mapStatus) {
-
-    }
-
-    @Override
-    public void onMapStatusChangeStart(MapStatus mapStatus, int i) {
-
-    }
-
-    @Override
-    public void onMapStatusChange(MapStatus mapStatus) {
-
-    }
-
-    @Override
-    public void onMapStatusChangeFinish(MapStatus mapStatus) {
-        Log.d(TAG, "onMapStatusChangeFinish: mSearchFlag: " + mSearchFlag + ", target: " + mapStatus.target);
-        if (mSearchFlag) {
-            mSearchFlag = false;
-            if (mSearchBd == null) {
-                mSearchBd = BitmapDescriptorFactory.fromResource(R.drawable.ic_location);
-            }
-            MarkerOptions option = new MarkerOptions().icon(mSearchBd).position(mapStatus.target);
-            if (mSearchMarker != null) {
-                mSearchMarker.remove();
-            }
-            mSearchMarker = (Marker) mBaiduMap.addOverlay(option);
-
-        }
-
-    }
-
-    @Override
-    public void onMapLoaded() {
-
+    public boolean onMarkerClick(Marker marker) {
+        Log.d(TAG, "onMarkerClick: marker: " + marker.getPosition());
+        Toast.makeText(this, marker.getPosition().toString(), Toast.LENGTH_LONG).show();
+        return false;
     }
 }
