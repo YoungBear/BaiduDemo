@@ -19,12 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.baidu.mapapi.model.LatLng;
 import com.google.gson.Gson;
 import com.ysx.baidu.demo.R;
@@ -35,6 +29,7 @@ import com.ysx.baidu.demo.constant.PlaceSugConstant;
 import com.ysx.baidu.demo.constant.SearchPlaceConstant;
 import com.ysx.baidu.demo.utils.SnUtils;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -44,6 +39,9 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
 
 /**
  * 搜索地理位置
@@ -68,8 +66,6 @@ public class SearchPlaceActivity extends AppCompatActivity {
     private ProgressDialog mDialog;
     private LatLng mCurrentLatLng;
 
-    private RequestQueue mRequestQueue;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +77,6 @@ public class SearchPlaceActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        cancelRequest();
         super.onDestroy();
     }
 
@@ -148,7 +143,6 @@ public class SearchPlaceActivity extends AppCompatActivity {
                 public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
 
-                        cancelRequest();
                         mDialog.dismiss();
                     }
                     return false;
@@ -181,7 +175,6 @@ public class SearchPlaceActivity extends AppCompatActivity {
         Map<String, String> paramsMap = new LinkedHashMap<>();
         paramsMap.put(PlaceSugConstant.KEY_KEYWORD, keyword);
         paramsMap.put(PlaceSugConstant.KEY_REGION, PlaceSugConstant.VALUE_REGION);
-        paramsMap.put(PlaceSugConstant.KEY_REGION, PlaceSugConstant.VALUE_REGION);
 
 
         if (mCurrentLatLng != null) {
@@ -192,10 +185,15 @@ public class SearchPlaceActivity extends AppCompatActivity {
 
         paramsMap.put(PlaceSugConstant.KEY_OUTPUT, PlaceSugConstant.VALUE_OUTPUT_JSON);
         paramsMap.put(PlaceSugConstant.KEY_AK, PlaceSugConstant.VALUE_AK);
+        paramsMap.put(PlaceSugConstant.KEY_TIME_STAMP, String.valueOf(System.currentTimeMillis()));
 
         String sn = SnUtils.getSnValue(PlaceSugConstant.SN_HOST, paramsMap);
+        Log.d(TAG, "doPlaceSearch: sn: " + sn);
+        /**
+         * sn值要放在最后
+         */
         paramsMap.put(PlaceSugConstant.KEY_SN, sn);
-        paramsMap.put(PlaceSugConstant.KEY_TIME_STAMP, String.valueOf(System.currentTimeMillis()));
+
         String url = null;
         try {
             url = PlaceSugConstant.BAIDU_PLACE_SUG_HOST + "?" + SnUtils.toQueryString(paramsMap);
@@ -206,19 +204,35 @@ public class SearchPlaceActivity extends AppCompatActivity {
 
         Log.d(TAG, "PlaceSug: url: " + url);
 
-        if (mRequestQueue == null) {
-            mRequestQueue = Volley.newRequestQueue(getApplicationContext());
-        }
-        StringRequest stringRequest = new StringRequest(
-                Request.Method.GET,
-                TAG,
-                new Response.Listener<String>() {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        final okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                dismissLoadingDialog();
+                Log.d(TAG, "onFailure: ");
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void onResponse(String response) {
-                        Log.d(TAG, "onResponse: " + response);
+                    public void run() {
+                        Toast.makeText(mContext, getString(R.string.search_failed), Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                Log.d(TAG, "onResponse: ");
+                Gson gson = new Gson();
+                final BaiduPlaceSugBean placeSugBean = gson.fromJson(response.body().string(), BaiduPlaceSugBean.class);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
                         dismissLoadingDialog();
-                        Gson gson = new Gson();
-                        BaiduPlaceSugBean placeSugBean = gson.fromJson(response, BaiduPlaceSugBean.class);
+                        Log.d(TAG, "run: placeSugBean.getStatus(): " + placeSugBean.getStatus());
                         if (placeSugBean.getStatus() == 0) {
                             mData.clear();
                             mData.addAll(placeSugBean.getResult());
@@ -230,28 +244,10 @@ public class SearchPlaceActivity extends AppCompatActivity {
                             Toast.makeText(mContext, getString(R.string.search_failed), Toast.LENGTH_SHORT).show();
                         }
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        dismissLoadingDialog();
-                        Log.d(TAG, "onErrorResponse: " + error.getMessage());
-                        Toast.makeText(mContext, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
-                    }
                 });
 
-        stringRequest.setShouldCache(false);
-        stringRequest.setTag(TAG);
-        mRequestQueue.add(stringRequest);
+            }
+        });
         showLoadingDialog();
-    }
-
-    /**
-     * 取消网络请求
-     */
-    private void cancelRequest() {
-        if (mRequestQueue != null) {
-            mRequestQueue.cancelAll(TAG);
-        }
     }
 }

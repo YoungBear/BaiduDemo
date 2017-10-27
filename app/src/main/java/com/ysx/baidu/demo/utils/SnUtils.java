@@ -15,7 +15,7 @@ import java.util.Map;
 public class SnUtils {
     private static final String TAG = "SnUtils";
 
-    private static final String YOUR_SK = "yoursk";
+    private static final String VALUE_SK = "BlpGvFS7vyF9LuW3i5ssqAEaQeq4Qlp8";
 
     /**
      * @return 获取sn签名
@@ -24,7 +24,7 @@ public class SnUtils {
         try {
             String paramsStr = toQueryString(paramsMap);
             Log.d(TAG, "getSnValue: paramsStr: " + paramsStr);
-            String wholeStr = new String(host + paramsStr + YOUR_SK);
+            String wholeStr = new String(host + paramsStr + VALUE_SK);
             String tempStr = URLEncoder.encode(wholeStr, "UTF-8");
             return MD5(tempStr);
         } catch (UnsupportedEncodingException e) {

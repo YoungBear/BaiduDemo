@@ -53,9 +53,8 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_result"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/layout_action_bar"
-        android:scrollbars="vertical"
-        android:visibility="gone" />
+        android:scrollbars="vertical" />
 
 </RelativeLayout>

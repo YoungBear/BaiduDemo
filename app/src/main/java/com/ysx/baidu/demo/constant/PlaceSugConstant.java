@@ -16,6 +16,9 @@ public final class PlaceSugConstant {
     public static final String BAIDU_PLACE_SUG_HOST =
             "http://api.map.baidu.com/place/v2/suggestion";
 
+    /**
+     * 计算sn时，由于我们使用的是placeSug API，则前缀为"/place/v2/suggestion?"
+     */
     public static final String SN_HOST = "/place/v2/suggestion?";
 
     // 搜索时需要传递的值的key
