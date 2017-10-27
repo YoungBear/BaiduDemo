@@ -1,5 +1,11 @@
 apply plugin: 'com.android.application'
 
+// 加载配置文件
+Properties props = new Properties()
+FileInputStream fis = new FileInputStream(file("./config.properties"))
+BufferedReader bf = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
+props.load(bf)
+
 android {
     compileSdkVersion 26
     defaultConfig {
@@ -10,12 +16,47 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-    buildTypes {
+
+    // 签名配置
+    signingConfigs {
+        debug {
+            storeFile file(props['DEBUG_STORE_FILE'])
+            storePassword props['DEBUG_STORE_PASSWORD']
+            keyAlias props['DEBUG_KEY_ALIAS']
+            keyPassword props['DEBUG_KEY_PASSWORD']
+        }
         release {
-            minifyEnabled false
+            storeFile file(props['RELEASE_STORE_FILE'])
+            storePassword props['RELEASE_STORE_PASSWORD']
+            keyAlias props['RELEASE_KEY_ALIAS']
+            keyPassword props['RELEASE_KEY_PASSWORD']
+        }
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false  //不启用Proguard混淆
+            shrinkResources false //是否清理无用资源,依赖于minifyEnabled
+            zipAlignEnabled false //是否启用zipAlign压缩
+            signingConfig signingConfigs.debug
+        }
+        release {
+            debuggable false
+            minifyEnabled true //启用Proguard混淆
+            shrinkResources true //是否清理无用资源,依赖于minifyEnabled
+            zipAlignEnabled true //是否启用zipAlign压缩
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        main {
+            jniLibs.srcDir 'libs'
+        }
+    }
+
 }
 
 dependencies {
@@ -25,4 +66,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    //第三方库
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }

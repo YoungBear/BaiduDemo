@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ysx.baidu.demo.activity.MapActivity">
+
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/iv_search"
+        android:layout_width="@dimen/iv_search_width"
+        android:layout_height="@dimen/iv_search_height"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="@dimen/iv_search_margin_right"
+        android:layout_marginTop="@dimen/iv_search_margin_top"
+        android:background="@drawable/selector_iv_search" />
+
+    <ImageView
+        android:id="@+id/iv_zoom_out"
+        android:layout_width="@dimen/iv_zoom_control_width"
+        android:layout_height="@dimen/iv_zoom_control_height"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/iv_zoom_control_margin_bottom"
+        android:layout_marginRight="@dimen/iv_zoom_control_margin_right"
+        android:src="@drawable/selector_iv_zoom_out" />
+
+    <ImageView
+        android:id="@+id/iv_zoom_in"
+        android:layout_width="@dimen/iv_zoom_control_width"
+        android:layout_height="@dimen/iv_zoom_control_height"
+        android:layout_above="@id/iv_zoom_out"
+        android:layout_alignRight="@id/iv_zoom_out"
+        android:src="@drawable/selector_iv_zoom_in" />
+
+    <ImageView
+        android:id="@+id/iv_gps"
+        android:layout_width="@dimen/iv_gps_width"
+        android:layout_height="@dimen/iv_gps_height"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="@dimen/iv_gps_margin_bottom"
+        android:layout_marginLeft="@dimen/iv_gps_margin_left"
+        android:src="@drawable/selector_iv_gps_refresh" />
+
+</RelativeLayout>

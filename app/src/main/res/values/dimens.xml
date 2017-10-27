@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- search btn -->
+    <dimen name="iv_search_width">64dp</dimen>
+    <dimen name="iv_search_height">54dp</dimen>
+    <dimen name="iv_search_margin_top">20dp</dimen>
+    <dimen name="iv_search_margin_right">5dp</dimen>
+
+    <dimen name="iv_zoom_control_width">35dp</dimen>
+    <dimen name="iv_zoom_control_height">35dp</dimen>
+    <dimen name="iv_zoom_control_margin_right">20dp</dimen>
+    <dimen name="iv_zoom_control_margin_bottom">20dp</dimen>
+
+    <dimen name="iv_gps_width">35dp</dimen>
+    <dimen name="iv_gps_height">35dp</dimen>
+    <dimen name="iv_gps_margin_left">20dp</dimen>
+    <dimen name="iv_gps_margin_bottom">40dp</dimen>
+</resources>
