@@ -3,4 +3,19 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="action_bar_color">#3e50b4</color>
+
+    <color name="search_bar_et_search_text_color">#464646</color>
+    <color name="search_bar_et_search_hint_text_color">#c8c8c8</color>
+    <color name="gis_search_result_item_tv_main_text_color">#464646</color>
+    <color name="gis_search_result_item_tv_sub_text_color">#969696</color>
+
+    <!-- 点击背景 start -->
+    <color name="common_item_layout_normal_color">#ffffff</color>
+    <color name="common_item_layout_pressed_color">#cfcfcf</color>
+    <!-- 点击背景 end -->
+
+    <color name="recycler_view_divider_color">#e2e2e2</color>
+
 </resources>

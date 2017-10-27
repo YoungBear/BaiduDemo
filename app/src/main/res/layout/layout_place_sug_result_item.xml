@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/gis_search_result_item_height"
+    android:background="@drawable/bg_common_item_layout">
+
+    <TextView
+        android:id="@+id/tv_poi_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/gis_search_result_item_tv_main_margin_top"
+        android:layout_marginLeft="@dimen/gis_search_result_item_tv_main_margin_left"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:textSize="@dimen/gis_search_result_item_tv_main_text_size"
+        android:textColor="@color/gis_search_result_item_tv_main_text_color"
+        android:text="天安门"
+        android:gravity="left|center_vertical" />
+
+    <TextView
+        android:id="@+id/tv_city_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_poi_name"
+        android:layout_below="@id/tv_poi_name"
+        android:layout_marginTop="@dimen/gis_search_result_item_tv_sub_margin_top"
+        android:textSize="@dimen/gis_search_result_item_tv_sub_text_size"
+        android:textColor="@color/gis_search_result_item_tv_sub_text_color"
+        android:text="北京市"
+        android:gravity="left|center_vertical" />
+
+</RelativeLayout>

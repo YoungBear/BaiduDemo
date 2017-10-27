@@ -1,5 +1,7 @@
 package com.ysx.baidu.demo.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,6 +17,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.ysx.baidu.demo.R;
+import com.ysx.baidu.demo.constant.SearchPlaceConstant;
 import com.ysx.baidu.demo.location.BDLocationManager;
 
 import butterknife.BindView;
@@ -38,6 +41,8 @@ public class MapActivity extends AppCompatActivity {
     ImageView mIvZoomIn;
     @BindView(R.id.iv_gps)
     ImageView mIvGps;
+
+    private static final int REQUEST_CODE_SEARCH = 1;
 
     private BaiduMap mBaiduMap;
     /**
@@ -81,10 +86,26 @@ public class MapActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult: ");
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_SEARCH) {
+            if (resultCode == Activity.RESULT_OK) {
+                double latitude = data.getDoubleExtra(SearchPlaceConstant.EXTRA_LATITUDE, 0D);
+                double longitude = data.getDoubleExtra(SearchPlaceConstant.EXTRA_LONGITUDE, 0D);
+                LatLng latLng = new LatLng(latitude, longitude);
+                locToCurrentPosition(mBaiduMap, latLng, DEFAULT_ZOOM);
+            }
+        }
+    }
+
     @OnClick({R.id.iv_search, R.id.iv_zoom_out, R.id.iv_zoom_in, R.id.iv_gps})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_search:
+                Intent intent = new Intent(this, SearchPlaceActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_SEARCH);
                 break;
             case R.id.iv_zoom_out:
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomOut());
