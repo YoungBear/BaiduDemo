@@ -1,7 +1,5 @@
 package com.ysx.baidu.demo.utils;
 
-import android.util.Log;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
@@ -15,16 +13,16 @@ import java.util.Map;
 public class SnUtils {
     private static final String TAG = "SnUtils";
 
-    private static final String VALUE_SK = "BlpGvFS7vyF9LuW3i5ssqAEaQeq4Qlp8";
-
     /**
+     * @param host      前缀 /place/v2/suggestion?
+     * @param sk        sk值
+     * @param paramsMap 存储参数及值的map
      * @return 获取sn签名
      */
-    public static String getSnValue(String host,Map<String, String> paramsMap) {
+    public static String getSnValue(String host, String sk, Map<String, String> paramsMap) {
         try {
             String paramsStr = toQueryString(paramsMap);
-            Log.d(TAG, "getSnValue: paramsStr: " + paramsStr);
-            String wholeStr = new String(host + paramsStr + VALUE_SK);
+            String wholeStr = new String(host + paramsStr + sk);
             String tempStr = URLEncoder.encode(wholeStr, "UTF-8");
             return MD5(tempStr);
         } catch (UnsupportedEncodingException e) {
@@ -34,7 +32,13 @@ public class SnUtils {
 
     }
 
-    // 对Map内所有value作utf8编码，拼接返回结果
+    /**
+     * 对Map内所有value作utf8编码，拼接返回结果
+     *
+     * @param data
+     * @return
+     * @throws UnsupportedEncodingException
+     */
     public static String toQueryString(Map<?, ?> data)
             throws UnsupportedEncodingException {
         StringBuffer queryString = new StringBuffer();
@@ -49,7 +53,13 @@ public class SnUtils {
         return queryString.toString();
     }
 
-    // 来自stackoverflow的MD5计算方法，调用了MessageDigest库函数，并把byte数组结果转换成16进制
+    /**
+     * 来自stackoverflow的MD5计算方法
+     * 调用了MessageDigest库函数，并把byte数组结果转换成16进制
+     *
+     * @param md5
+     * @return
+     */
     public static String MD5(String md5) {
         try {
             java.security.MessageDigest md = java.security.MessageDigest

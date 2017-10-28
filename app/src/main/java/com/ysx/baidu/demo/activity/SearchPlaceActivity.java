@@ -121,7 +121,7 @@ public class SearchPlaceActivity extends AppCompatActivity {
 
     /**
      * @param resultBean 百度位置信息
-     *                   返回到GisActivity
+     *                   返回到MapActivity
      */
     private void backToMapActivity(BaiduPlaceSugBean.ResultBean resultBean) {
         Intent data = new Intent();
@@ -187,7 +187,7 @@ public class SearchPlaceActivity extends AppCompatActivity {
         paramsMap.put(PlaceSugConstant.KEY_AK, PlaceSugConstant.VALUE_AK);
         paramsMap.put(PlaceSugConstant.KEY_TIME_STAMP, String.valueOf(System.currentTimeMillis()));
 
-        String sn = SnUtils.getSnValue(PlaceSugConstant.SN_HOST, paramsMap);
+        String sn = SnUtils.getSnValue(PlaceSugConstant.SN_HOST, PlaceSugConstant.VALUE_SK, paramsMap);
         Log.d(TAG, "doPlaceSearch: sn: " + sn);
         /**
          * sn值要放在最后

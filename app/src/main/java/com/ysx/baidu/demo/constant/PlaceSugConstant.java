@@ -135,4 +135,11 @@ public final class PlaceSugConstant {
      */
     public static final String VALUE_MCODE = "84:3D:AA:CE:CB:9C:8E:BA:EC:87:AE:43:A2:DC:8E:72:3A:1B:49:A0;com.ysx.baidu.demo";
 
+    /**
+     * 申请的ak值所对应的sk值
+     * // TODO: 2017/10/28 将该值写入配置文件
+     * 可以采用manifestPlaceholders 或者 BuildConfig 动态设置
+     */
+    public static final String VALUE_SK = "BlpGvFS7vyF9LuW3i5ssqAEaQeq4Qlp8";
+
 }
