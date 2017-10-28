@@ -198,6 +198,16 @@ SDKInitializer.setCoordType(CoordType.BD09LL);
             android:process=":remote" />
 ```
 
+## 4. 添加混淆配置
+
+百度地图相关混淆配置：
+
+```
+-keep class com.baidu.** {*;}
+-keep class vi.com.** {*;}
+-dontwarn com.baidu.**
+```
+
 ## [Demo地址](https://github.com/YoungBear/BaiduDemo)
 
 ## Tips：
