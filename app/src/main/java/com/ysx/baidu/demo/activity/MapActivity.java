@@ -94,6 +94,9 @@ public class MapActivity extends AppCompatActivity implements
         mBaiduMap.setMyLocationEnabled(false);
         mMapView.onDestroy();
         mMapView = null;
+        if (mSearchBd != null) {
+            mSearchBd.recycle();
+        }
         super.onDestroy();
     }
 
