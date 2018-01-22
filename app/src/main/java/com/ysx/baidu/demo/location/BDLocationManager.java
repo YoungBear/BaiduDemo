@@ -93,7 +93,7 @@ public class BDLocationManager {
     private LocationClientOption getBDLocationOption() {
         LocationClientOption locOption = new LocationClientOption();
         locOption.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy); //高精度
-        locOption.setCoorType(Utils.CoorType_BD09LL); //使用百度坐标
+        locOption.setCoorType(Utils.CoorType_BD09LL); //使用百度经纬度坐标，与地图坐标类型保持一致
         locOption.setOpenGps(true); // 打开GPS定位
         locOption.setScanSpan(2000); //定位间隔，2000ms，必须大于1000ms才有效
         locOption.setIsNeedAddress(true); //需要地址信息

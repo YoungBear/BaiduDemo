@@ -134,6 +134,9 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initMapViewSDK() {
         SDKInitializer.initialize(getApplicationContext());
+        /**
+         * 使用百度经纬度坐标，与定位坐标类型一致
+         */
         SDKInitializer.setCoordType(CoordType.BD09LL);
     }
 }

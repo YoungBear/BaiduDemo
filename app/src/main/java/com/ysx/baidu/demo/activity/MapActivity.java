@@ -25,6 +25,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.ysx.baidu.demo.R;
 import com.ysx.baidu.demo.constant.SearchPlaceConstant;
 import com.ysx.baidu.demo.location.BDLocationManager;
+import com.ysx.baidu.demo.utils.ConverterUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -198,6 +199,9 @@ public class MapActivity extends AppCompatActivity implements
             mCurrentLatLng = new LatLng(bdLocation.getLatitude(),
                     bdLocation.getLongitude());
             Log.v(TAG, "onReceiveLocation: mCurrentLatLng: " + mCurrentLatLng);
+            LatLng bd09ll = mCurrentLatLng;
+            LatLng gcj02 = ConverterUtils.BD09LLtoGCJ02(bd09ll);
+            Log.d(TAG, "gcj02: " + gcj02 + ", bd09ll: " + bd09ll);
             if (isFirstLoc) {
                 isFirstLoc = false;
                 locToCurrentPosition(mBaiduMap, mCurrentLatLng, DEFAULT_ZOOM);
